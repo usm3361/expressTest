@@ -24,7 +24,9 @@ export const writeUsers = async (users) => {
 export async function validateUser(username, password) {
   const users = await readUsers();
   const user = users.find(
-    (u) => u.username.toLowerCase() === username.toLowerCase() && u.password === password
+    (u) =>
+      u.username.toLowerCase() === username.toLowerCase() &&
+      u.password === password
   );
   return user || null;
 }
@@ -58,16 +60,19 @@ export const writeReceipts = async (receipts) => {
   await fs.writeFile(RECEIPTS_PATH, JSON.stringify(receipts, null, 2));
 };
 
-
-// server function
-export const healthServer = async (req, res) => {
-  try {
-    res.status(200).json({
-      msg: "server running",
-      status: "ok",
-      serverTime: "ISO_TIMESTAMP",
-    });
-  } catch (err) {
-    console.log(err);
-  }
-};
+// export const updateTicketsAvalible = async (req, res) => {
+//   try {
+//     const { eventName, quantity } = req.body;
+//     const events = await readEvents();
+//     const eventToUpdate = events.find((e) => e.eventName === eventName);
+//     eventToUpdate.ticketsForSale -= quantity;
+//     await writeEvents(events);
+//     return res.status(200).json({
+//       message: "Tickets updated successfully",
+//       remainingTickets: eventToUpdate.ticketsForSale,
+//     });
+//   } catch (err) {
+//     console.log(err);
+//     return res.status(500).json({ message: "Internal server error" });
+//   }
+// };

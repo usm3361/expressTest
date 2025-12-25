@@ -3,6 +3,7 @@ import {
   readReceipts,
   readUsers,
   validateUser,
+  writeEvents,
   writeReceipts,
   writeUsers,
 } from "../utils/helperFunction.js";
@@ -31,59 +32,53 @@ export const createUser = async (req, res) => {
     }
   } catch (err) {
     console.log(err);
-    res.status(500).json({ msg: "error" + err.message, data: null });
+    res.status(500).json({ msg: err + err.message, data: null });
   }
 };
 
 export const buyTickets = async (req, res) => {
   try {
     const { username, password, eventName, quantity } = req.body;
+    if (!username || !password || !eventName || !quantity) {
+      return res.status(400).json({
+        message:
+          "Body must contain: username, password, eventName, and quantity",
+      });
+    }
     const user = await validateUser(username, password);
     if (!user) {
       return res
         .status(401)
         .json({ message: "Unauthorized: Invalid username or password" });
     } else {
-        const events = await readEvents();
-        const receipts = await readReceipts()
+      const events = await readEvents();
+      const receipts = await readReceipts();
       const findEvent = events.find(
         (e) => e.eventName.toLowerCase() === eventName.toLowerCase()
       );
       if (!findEvent) {
         return res.status(404).json({ message: "event not found" });
       } else {
-        const newReceipts = {
-          username,
-          eventName,
-          ticketsBought: quantity,
-        };
-        if (
-          !req.body.username ||
-          !req.body.password ||
-          !req.body.eventName ||
-          !req.body.quantity
-        ) {
+        if (findEvent.ticketsForSale < quantity) {
           return res.status(400).json({
-            message:
-              "The body of buy must contain a username and password and eventName and quantity tickets For Sale",
+            message: "Not enough tickets left,",
+            ticketsAvailable: findEvent.ticketsForSale,
           });
         } else {
-          if (findEvent.ticketsForSale < quantity) {
-            return res.status(400).json({
-              message: "Not enough tickets left,",
-              ticketsAvailable: findEvent.ticketsForSale,
-            });
-          } else {
-              findEvent.ticketsForSale -= newReceipts.ticketsBought;
-              receipts.push(newReceipts)
-            await writeReceipts(receipts);
-            res.status(201).json({ message: "added new receipts" });
-          }
+          findEvent.ticketsForSale -= quantity;
+          const newReceipts = {
+            username,
+            eventName,
+            ticketsBought: quantity,
+          };
+          receipts.push(newReceipts);
+          await Promise.all([writeEvents(events), writeReceipts(receipts)]);
+          res.status(201).json({ message: "Purchase completed successfully", receipt: newReceipts });
         }
       }
     }
   } catch (err) {
     console.log(err);
-    res.status(500).json({ msg: "error" + err.message, data: null });
+    res.status(500).json({ msg: err + err.message, data: null });
   }
 };

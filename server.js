@@ -1,7 +1,6 @@
 import express from "express";
 import users from "./routes/users.js"
 import events from "./routes/events.js"
-import { healthServer } from "./utils/helperFunction.js";
 
 
 

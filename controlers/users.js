@@ -1,4 +1,4 @@
-import { readUsers, validateUser, writeUsers } from "../utils/helperFunction.js";
+import { readEvents, readUsers, validateUser, writeUsers } from "../utils/helperFunction.js";
 
 export const createUser = async (req, res) => {
   try {

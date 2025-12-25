@@ -1,4 +1,3 @@
-import { Router } from "express";
 import express from "express";
 import users from "./routes/users.js"
 import events from "./routes/events.js"
@@ -11,16 +10,15 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
-const router = Router();
+app.get("/", (req, res) => {
+  res.send({ message: "Welcome to Simple Auth API" });
+});
 
-// route health
-router.route("/").get(healthServer)
-
-app.use("/", users)
+app.use("/users", users)
 app.use("/creator", events)
 
 
-app.listen(PORT, () => {
+app.listen(PORT,"0.0.0.0", () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
 

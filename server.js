@@ -17,7 +17,7 @@ const router = Router();
 router.route("/").get(healthServer)
 
 app.use("/", users)
-app.use("/", events)
+app.use("/creator", events)
 
 
 app.listen(PORT, () => {

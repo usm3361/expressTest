@@ -1,10 +1,16 @@
-import { readEvents, readUsers, validateUser, writeUsers } from "../utils/helperFunction.js";
+import {
+  readEvents,
+  readReceipts,
+  readUsers,
+  validateUser,
+  writeReceipts,
+  writeUsers,
+} from "../utils/helperFunction.js";
 
 export const createUser = async (req, res) => {
   try {
     const users = await readUsers();
     const { username, password } = req.body;
-
     if (
       users.some((u) => u.username.toLowerCase() === username.toLowerCase())
     ) {
@@ -38,7 +44,8 @@ export const buyTickets = async (req, res) => {
         .status(401)
         .json({ message: "Unauthorized: Invalid username or password" });
     } else {
-      const events = await readEvents();
+        const events = await readEvents();
+        const receipts = await readReceipts()
       const findEvent = events.find(
         (e) => e.eventName.toLowerCase() === eventName.toLowerCase()
       );
@@ -67,9 +74,10 @@ export const buyTickets = async (req, res) => {
               ticketsAvailable: findEvent.ticketsForSale,
             });
           } else {
-            await writeUsers(newReceipts);
+              findEvent.ticketsForSale -= newReceipts.ticketsBought;
+              receipts.push(newReceipts)
+            await writeReceipts(receipts);
             res.status(201).json({ message: "added new receipts" });
-            findEvent.ticketsForSale -= quantity;
           }
         }
       }

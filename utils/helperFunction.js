@@ -44,6 +44,16 @@ export const writeEvents = async (events) => {
 };
 
 // receipts function
+export const readReceipts = async () => {
+  try {
+    const RECEIPTS = await fs.readFile(RECEIPTS_PATH, "utf-8");
+    const RECEIPTSOBJ = JSON.parse(RECEIPTS);
+    return RECEIPTSOBJ;
+  } catch (err) {
+    console.log(err);
+    return [];
+  }
+};
 export const writeReceipts = async (receipts) => {
   await fs.writeFile(RECEIPTS_PATH, JSON.stringify(receipts, null, 2));
 };

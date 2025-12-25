@@ -41,6 +41,6 @@ export const createEvent = async (req, res) => {
     }
   } catch (err) {
     console.log(err);
-    res.status(500).json({ msg: "error" + err.message, data: null });
+    res.status(500).json({ msg: err + err.message, data: null });
   }
 };

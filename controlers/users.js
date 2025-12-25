@@ -1,4 +1,4 @@
-import { readUsers, writeUsers } from "../utils/helperFunction.js";
+import { readUsers, validateUser, writeUsers } from "../utils/helperFunction.js";
 
 export const createUser = async (req, res) => {
   try {
@@ -31,7 +31,7 @@ export const createUser = async (req, res) => {
 
 export const buyTickets = async (req, res) => {
   try {
-    const { username, password, eventName, quantity } = req.budy;
+    const { username, password, eventName, quantity } = req.body;
     const user = await validateUser(username, password);
     if (!user) {
       return res

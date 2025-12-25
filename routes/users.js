@@ -5,7 +5,6 @@ const router = Router();
 
 // routs users
 router.route("/users/register").post(createUser);
-router.route("/users/tickets/buy").post(createUser);
-router.route("/users/:username/summary").post(buyTickets);
+router.route("/users/tickets/buy").post(buyTickets);
 
 export default router;

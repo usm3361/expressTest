@@ -1,15 +1,11 @@
-import { createUser } from "../constractor/users.js";
+import { buyTickets, createUser } from "../controlers/users.js";
 import { Router } from "express";
-import { readUsers } from "../utils/helperFunction.js";
 
 const router = Router();
 
 // routs users
-router.route("/users").get(readUsers);
-router.route("/users/register").post(createUser)
+router.route("/users/register").post(createUser);
 router.route("/users/tickets/buy").post(createUser);
-router.route("/users/:username/summary");
-
-
+router.route("/users/:username/summary").post(buyTickets);
 
 export default router;

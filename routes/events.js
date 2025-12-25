@@ -1,11 +1,9 @@
 import { Router } from "express";
-import { createEvent } from "../constractor/events.js";
-import { readEvents } from "../utils/helperFunction.js";
+import { createEvent } from "../controlers/events.js";
 
 const router = Router();
 
 // routs events
-router.route("/events").get(readEvents);
 router.route("creator/events").post(createEvent);
 
 export default router;

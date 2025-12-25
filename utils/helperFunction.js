@@ -2,6 +2,7 @@ import fs from "fs/promises";
 
 const USERS_PATH = "./data/users.json";
 const EVENTS_PATH = "./data/events.json";
+const RECEIPTS_PATH = "./data/receipts.json";
 
 // user function
 export const readUsers = async () => {
@@ -42,21 +43,11 @@ export const writeEvents = async (events) => {
   await fs.writeFile(EVENTS_PATH, JSON.stringify(events, null, 2));
 };
 
-// export const validateUser = async (username, password) => {
-//   const users = await readUsers();
-//   const user = users.find((u) => u.username.toUpperCase() === username.toUpperCase());
-//   if (user) {
-//     const isValid = user.password === password;
-//     if (user && isValid) {
-//       return user;
-//     } else {
-//       return null;
-//     }
-//   } else {
-//     console.log("user not found");
-//     return null;
-//   }
-// };
+// receipts function
+export const writeReceipts = async (receipts) => {
+  await fs.writeFile(RECEIPTS_PATH, JSON.stringify(receipts, null, 2));
+};
+
 
 // server function
 export const healthServer = async (req, res) => {

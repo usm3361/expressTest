@@ -39,13 +39,39 @@ export const buyTickets = async (req, res) => {
         .json({ message: "Unauthorized: Invalid username or password" });
     } else {
       const events = await readEvents();
-      const findEvents = events.find(
+      const findEvent = events.find(
         (e) => e.eventName.toLowerCase() === eventName.toLowerCase()
       );
-      if (!findEvents) {
-          return res.status(404).json({ message: "event not found" });
+      if (!findEvent) {
+        return res.status(404).json({ message: "event not found" });
       } else {
-          
+        const newReceipts = {
+          username,
+          eventName,
+          ticketsBought: quantity,
+        };
+        if (
+          !req.body.username ||
+          !req.body.password ||
+          !req.body.eventName ||
+          !req.body.quantity
+        ) {
+          return res.status(400).json({
+            message:
+              "The body of buy must contain a username and password and eventName and quantity tickets For Sale",
+          });
+        } else {
+          if (findEvent.ticketsForSale < quantity) {
+            return res.status(400).json({
+              message: "Not enough tickets left,",
+              ticketsAvailable: findEvent.ticketsForSale,
+            });
+          } else {
+            await writeUsers(newReceipts);
+            res.status(201).json({ message: "added new receipts" });
+            findEvent.ticketsForSale -= quantity;
+          }
+        }
       }
     }
   } catch (err) {

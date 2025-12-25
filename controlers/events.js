@@ -33,10 +33,11 @@ export const createEvent = async (req, res) => {
           message:
             "The body of event must contain a username and password and eventName and tickets For Sale",
         });
+      } else {
+        events.push(newEvent);
+        await writeEvents(events);
+        res.status(201).json({ message: "Event created successfully" });
       }
-      events.push(newEvent);
-      await writeEvents(events);
-      res.status(201).json({ message: "Event created successfully" });
     }
   } catch (err) {
     console.log(err);

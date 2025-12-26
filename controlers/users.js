@@ -73,10 +73,27 @@ export const buyTickets = async (req, res) => {
           };
           receipts.push(newReceipts);
           await Promise.all([writeEvents(events), writeReceipts(receipts)]);
-          res.status(201).json({ message: "Purchase completed successfully", receipt: newReceipts });
+          res
+            .status(201)
+            .json({
+              message: "Purchase completed successfully",
+              receipt: newReceipts,
+            });
         }
       }
     }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: err + err.message, data: null });
+  }
+};
+
+export const summaryAllTicketsByUser = async (req, res) => {
+  try {
+    const {username} = req.params
+    const receipts = await readReceipts()
+    const findReceipt = receipts.find(receipt=>receipt.username.toLowerCase()===username)
+console.log(findReceipt)
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: err + err.message, data: null });
